@@ -1,60 +1,51 @@
 import math
 import random
-
-
-# ------------------------------
-# 1. 相关系数R（皮尔逊）计算
-# ------------------------------
 def pearson_correlation(x, y):
-    """计算皮尔逊相关系数R及对应的P值（简化版）"""
+  
     n = len(x)
     if len(y) != n:
         raise ValueError("x和y长度必须一致")
 
-    # 计算均值
+    
     mean_x = sum(x) / n
     mean_y = sum(y) / n
 
-    # 计算分子（协方差之和）和分母（标准差乘积）
+   
     numerator = sum((xi - mean_x) * (yi - mean_y) for xi, yi in zip(x, y))
     denominator = math.sqrt(sum((xi - mean_x) ** 2 for xi in x)) * math.sqrt(sum((yi - mean_y) ** 2 for yi in y))
 
     r = numerator / denominator if denominator != 0 else 0.0
 
-    # 简化P值计算（基于t分布近似，实际需查t分布表）
+    
     t_stat = r * math.sqrt((n - 2) / (1 - r ** 2)) if (1 - r ** 2) != 0 else 0.0
-    # 此处P值为简化模拟（真实计算需用t分布累积分布函数）
+    
     p_value = 0.001 if abs(t_stat) > 3 else 0.05 if abs(t_stat) > 2 else 0.1
     return r, p_value
 
 
-# ------------------------------
-# 2. t检验P值计算（独立样本）
-# ------------------------------
+
 def t_test_ind(group1, group2):
-    """计算独立样本t检验的t统计量和P值（简化版）"""
+   
     n1, n2 = len(group1), len(group2)
     mean1, mean2 = sum(group1) / n1, sum(group2) / n2
 
-    # 计算方差
+    
     var1 = sum((x - mean1) ** 2 for x in group1) / (n1 - 1)
     var2 = sum((x - mean2) ** 2 for x in group2) / (n2 - 1)
 
-    # 合并方差
+  
     pooled_var = ((n1 - 1) * var1 + (n2 - 1) * var2) / (n1 + n2 - 2)
 
-    # t统计量
+   
     t_stat = (mean1 - mean2) / math.sqrt(pooled_var * (1 / n1 + 1 / n2))
 
-    # 简化P值计算（基于自由度和t值模拟）
+    
     df = n1 + n2 - 2  # 自由度
     p_value = 0.01 if abs(t_stat) > 2.5 else 0.05 if abs(t_stat) > 2 else 0.1
     return t_stat, p_value
 
 
-# ------------------------------
-# 3. ANOVA的F值计算
-# ------------------------------
+
 def anova_f_value(*groups):
     """计算单因素ANOVA的F值和P值（简化版）"""
     k = len(groups)  # 组数
@@ -78,10 +69,6 @@ def anova_f_value(*groups):
     p_value = 0.01 if f_stat > 5 else 0.05 if f_stat > 3 else 0.1
     return f_stat, p_value
 
-
-# ------------------------------
-# 4. AUC值计算（ROC曲线下面积）
-# ------------------------------
 def calculate_auc(y_true, y_pred_proba):
     """计算AUC值（基于排序法）"""
     # 合并真实标签和预测概率并按概率排序
@@ -142,6 +129,7 @@ if __name__ == "__main__":
     print(f"2. t检验P值: {p_ttest:.4f} (t统计量: {t_stat:.4f})")
     print(f"3. ANOVA F值: {f_stat:.4f} (P值: {p_anova:.4f})")
     print(f"4. AUC值: {auc:.4f}")
+
 
 
 
